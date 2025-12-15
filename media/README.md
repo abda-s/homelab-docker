@@ -4,17 +4,18 @@ A simplified, Docker-based media server stack featuring Jellyfin, qBittorrent, a
 
 ## Features
 
-  * **Media Server:** Jellyfin
-  * **Download Client:** qBittorrent
-  * **Automation:** Sonarr (TV), Radarr (Movies), Bazarr (Subtitles)
-  * **Indexer Manager:** Prowlarr
-  * **Static Networking:** Custom bridge network with assigned static IPs for stability.
+*   **Media Server:** Jellyfin
+*   **Download Client:** qBittorrent
+*   **Automation:** Sonarr (TV), Radarr (Movies), Bazarr (Subtitles)
+*   **Indexer Manager:** Prowlarr
+*   **Static Networking:** Custom bridge network with assigned static IPs for stability.
+*   **Hardware Acceleration:** Pre-configured for Intel Quick Sync (QSV) on Jellyfin.
 
 ## Prerequisites
 
 Before running the stack, you must create a `.env` file in the same directory as your `compose.yaml`. This file defines the variables used for permissions and file paths.
 
-### 1\. Create the `.env` file
+### 1. Create the `.env` file
 
 Create a file named `.env` and paste the following. Change the values to match your specific setup:
 
@@ -30,7 +31,7 @@ TZ=America/New_York
 MEDIA_PATH=/home/user/media_server/data
 ```
 
-### 2\. Directory Structure & Permissions
+### 2. Directory Structure & Permissions
 
 To ensure hardlinks work (instant moves instead of copying files) and to keep file management simple, we use a single volume mount point `/data`.
 
@@ -67,48 +68,48 @@ sudo chown -R 1000:1000 /path/to/your/data
 
 This stack uses a custom bridge network (`medianetwork`) with the subnet `172.40.0.0/24`.
 
-| Service | App URL | Static IP | Description |
-| :--- | :--- | :--- | :--- |
-| **Jellyfin** | `http://localhost:8096` | `172.40.0.10` | Media Server |
-| **qBittorrent** | `http://localhost:8080` | `172.40.0.14` | Torrent Client |
-| **Prowlarr** | `http://localhost:9696` | `172.40.0.16` | Indexer Manager |
-| **Sonarr** | `http://localhost:8989` | `172.40.0.17` | TV Shows |
-| **Radarr** | `http://localhost:7878` | `172.40.0.18` | Movies |
-| **Bazarr** | `http://localhost:6767` | `172.40.0.20` | Subtitles |
+| Service       | App URL                 | Static IP     | Description     | Notes                                                              |
+| :------------ | :---------------------- | :------------ | :-------------- | :----------------------------------------------------------------- |
+| **Jellyfin**  | `http://localhost:8096` | `172.40.0.10` | Media Server    | Configured for Intel Quick Sync (QSV) hardware acceleration.       |
+| **qBittorrent** | `http://localhost:8080` | `172.40.0.14` | Torrent Client  | **Warning:** Not configured with a VPN.                            |
+| **Prowlarr**  | `http://localhost:9696` | `172.40.0.16` | Indexer Manager |                                                                    |
+| **Sonarr**    | `http://localhost:8989` | `172.40.0.17` | TV Shows        |                                                                    |
+| **Radarr**    | `http://localhost:7878` | `172.40.0.18` | Movies          |                                                                    |
+| **Bazarr**    | `http://localhost:6767` | `172.40.0.20` | Subtitles       |                                                                    |
 
 ## Configuration Guide
 
-### 1\. qBittorrent Setup
+### 1. qBittorrent Setup
 
-  * **Login:** The default login is usually `admin` / `adminadmin` (check logs if random password is generated: `docker logs qbittorrent`).
-  * **Download Paths:** Go to *Tools \> Options \> Downloads*. Map the paths to the internal container structure:
-      * **Default Save Path:** `/data/torrents/qbittorrent/completed`
-      * **Keep incomplete torrents in:** `/data/torrents/qbittorrent/incomplete`
-      * **Copy .torrent files to:** `/data/torrents/qbittorrent/torrents`
+*   **Login:** The default login is usually `admin` / `adminadmin` (check logs if random password is generated: `docker logs qbittorrent`).
+*   **Download Paths:** Go to *Tools > Options > Downloads*. Map the paths to the internal container structure:
+    *   **Default Save Path:** `/data/torrents/qbittorrent/completed`
+    *   **Keep incomplete torrents in:** `/data/torrents/qbittorrent/incomplete`
+    *   **Copy .torrent files to:** `/data/torrents/qbittorrent/torrents`
 
-> [\!WARNING]
+> [!WARNING]
 > This docker compose configuration **does not** include a VPN container (Gluetun). Your IP address will be visible when downloading torrents. Ensure you are using a proxy within qBittorrent or are aware of the privacy risks.
 
-### 2\. Connecting Apps (\*Arr to Clients)
+### 2. Connecting Apps (*Arr to Clients)
 
 Because we are using a custom network with static IPs, configuration is straightforward.
 
 **Adding Download Client (in Sonarr/Radarr):**
 
-  * **Host:** `172.40.0.14` (or use the container name `qbittorrent`)
-  * **Port:** `8080`
+*   **Host:** `172.40.0.14` (or use the container name `qbittorrent`)
+*   **Port:** `8080`
 
 **Adding Prowlarr to Sonarr/Radarr:**
 
-  * **Host:** `172.40.0.16` (or use the container name `prowlarr`)
-  * **Port:** `9696`
+*   **Host:** `172.40.0.16` (or use the container name `prowlarr`)
+*   **Port:** `9696`
 
-### 3\. Path Mapping (Root Folder)
+### 3. Path Mapping (Root Folder)
 
 When setting up Sonarr/Radarr, when asked for the **Root Folder** for your media, always select the path inside `/data`.
 
-  * Movies Root: `/data/media/movies`
-  * TV Root: `/data/media/tv`
+*   Movies Root: `/data/media/movies`
+*   TV Root: `/data/media/tv`
 
 ## Troubleshooting
 
