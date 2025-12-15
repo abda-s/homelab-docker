@@ -9,6 +9,7 @@ services:
       - "8085:80"
     environment:
       TZ: 'Asia/Amman'
+      FTLCONF_webserver_api_password: ${ADMIN_PASSWORD}
     volumes:
       - ./etc-pihole:/etc/pihole
       - ./etc-dnsmasq.d:/etc/dnsmasq.d
