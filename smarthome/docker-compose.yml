@@ -11,3 +11,15 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Amman
+  esphome:
+    container_name: esphome
+    image: ghcr.io/esphome/esphome
+    restart: always
+    privileged: true
+    network_mode: host
+    volumes:
+      - /opt/esphome:/config
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - USERNAME=${ESPHOME_USERNAME}
+      - PASSWORD=${ESPHOME_PASSWORD}
