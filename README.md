@@ -16,6 +16,7 @@ Here is where everything lives on the network:
 | --- | --- | --- | --- |
 | Pi-hole | `dns` | `8085` | `http://<host-ip>:8085` |
 | Home Assistant | `smarthome` | `8123` | `http://<host-ip>:8123` |
+| ESPHome | `smarthome` | `6052` | `http://<host-ip>:6052` |
 | Immich | `immich` | `2283` | `http://<host-ip>:2283` |
 | Jellyfin | `media` | `8096` | `http://<host-ip>:8096` |
 | qBittorrent | `media` | `8080` | `http://<host-ip>:8080` |
@@ -24,7 +25,7 @@ Here is where everything lives on the network:
 | Radarr | `media` | `7878` | `http://<host-ip>:7878` |
 | Bazarr | `media` | `6767` | `http://<host-ip>:6767` |
 
-*Note: Home Assistant runs in `host` network mode, so it directly uses port `8123` on the host machine.*
+*Note: Home Assistant and ESPHome run in `host` network mode, so they directly use ports `8123` and `6052` respectively on the host machine.*
 
 
 ## Roadmap
