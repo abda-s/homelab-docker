@@ -9,7 +9,8 @@ Building this was a massive hassle. I spent way too much time fighting with Linu
 *   [**Media Stack**](./media/): A comprehensive suite of applications for managing and streaming media, including Jellyfin, the *Arr suite, and qBittorrent.
 *   [**Smarthome (Home Assistant)**](./smarthome/): A powerful home automation platform for controlling smart devices and creating automations.
 
-##Service PortsHere is where everything lives on the network:
+## Service Ports
+Here is where everything lives on the network:
 
 | Service | Stack | Port | URL |
 | --- | --- | --- | --- |
