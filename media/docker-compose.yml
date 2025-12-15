@@ -1,0 +1,119 @@
+services:
+  # === MEDIA STREAMING ===
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./jellyfin:/config
+      - ${MEDIA_PATH}:/data
+    devices:
+      - /dev/dri:/dev/dri # Intel QuickSync
+    ports:
+      - 8096:8096
+      - 7359:7359/udp
+      - 1901:1900/udp
+    networks:
+      medianetwork:
+        ipv4_address: 172.40.0.10
+    restart: unless-stopped
+
+  # === DOWNLOAD CLIENTS ===
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+    volumes:
+      - ./qbittorrent:/config
+      - ${MEDIA_PATH}:/data
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    networks:
+      medianetwork:
+        ipv4_address: 172.40.0.14
+    restart: unless-stopped
+
+  # === INDEXERS ===
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./prowlarr:/config
+    ports:
+      - 9696:9696
+    networks:
+      medianetwork:
+        ipv4_address: 172.40.0.16
+    restart: unless-stopped
+
+  # === MEDIA MANAGEMENT ===
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./sonarr:/config
+      - ${MEDIA_PATH}:/data
+    ports:
+      - 8989:8989
+    networks:
+      medianetwork:
+        ipv4_address: 172.40.0.17
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./radarr:/config
+      - ${MEDIA_PATH}:/data
+    ports:
+      - 7878:7878
+    networks:
+      medianetwork:
+        ipv4_address: 172.40.0.18
+    restart: unless-stopped
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./bazarr:/config
+      - ${MEDIA_PATH}:/data
+    ports:
+      - 6767:6767
+    networks:
+      medianetwork:
+        ipv4_address: 172.40.0.20
+    restart: unless-stopped
+
+networks:
+  medianetwork:
+    name: medianetwork
+    ipam:
+      config:
+        - subnet: 172.40.0.0/24

@@ -1,0 +1,16 @@
+# --- System ---
+.DS_Store
+Thumbs.db
+.env
+**/*.env
+# --- Media ---
+media/*/
+
+# --- Smart Home ---
+smarthome/*/
+
+# --- DNS ---
+dns/pi-hole/*/
+
+# --- Immich ---
+immich/*/
