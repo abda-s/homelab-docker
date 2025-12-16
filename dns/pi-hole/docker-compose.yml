@@ -9,7 +9,7 @@ services:
       TZ: 'Asia/Amman'
       FTLCONF_webserver_api_password: ${ADMIN_PASSWORD}
       # This forces the internal web server to listen on 8050 directly
-      WEB_PORT: 8050 
+      FTLCONF_webserver_port: 8050 
     volumes:
       - ./etc-pihole:/etc/pihole
       - ./etc-dnsmasq.d:/etc/dnsmasq.d
