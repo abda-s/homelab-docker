@@ -3,13 +3,13 @@ services:
     container_name: pihole
     image: pihole/pihole:latest
     restart: unless-stopped
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "8085:80"
+    # "ports" section is REMOVED because we are using host network
+    network_mode: host
     environment:
       TZ: 'Asia/Amman'
       FTLCONF_webserver_api_password: ${ADMIN_PASSWORD}
+      # This forces the internal web server to listen on 8050 directly
+      WEB_PORT: 8050 
     volumes:
       - ./etc-pihole:/etc/pihole
       - ./etc-dnsmasq.d:/etc/dnsmasq.d
