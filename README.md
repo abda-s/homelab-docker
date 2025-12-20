@@ -4,6 +4,7 @@ This is my personal homelab setup. It is a collection of self-hosted services fo
 Building this was a massive hassle. I spent way too much time fighting with Linux permissions, Docker volumes, and getting Apple devices to actually respect my local DNS. But it finally works, and it allows me to own my data instead of relying on big tech.
 
 ## Structure
+*   [**Dashboard (Homarr)**](./core/dashboard/): A simple and powerful server dashboard.
 *   [**DNS (Pi-hole)**](./dns/pi-hole/): A network-wide ad and tracker blocker. It acts as a local DNS server to filter out unwanted requests.
 *   [**Immich**](./immich/): A self-hosted photo and video backup solution, providing a private alternative to Google Photos.
 *   [**Media Stack**](./media/): A comprehensive suite of applications for managing and streaming media, including Jellyfin, the *Arr suite, and qBittorrent.
@@ -15,6 +16,7 @@ Here is a summary of the main services and their access points:
 
 | Service | Stack | URL | Notes |
 | :--- | :--- | :--- | :--- |
+| Dashboard | `core` | `http://dashboard.elwahsh.home` | A simple, yet powerful dashboard for your server. |
 | NGINX | `core` | `http://<subdomain>.elwahsh.home` | Reverse proxy for all other services. |
 | Pi-hole | `dns` | `http://pihole.elwahsh.home` | Network-wide ad-blocker and DNS. |
 | Home Assistant | `smarthome` | `http://ha.elwahsh.home` | Runs in `host` network mode. |
@@ -32,7 +34,7 @@ Here is a summary of the main services and their access points:
 
 ## Roadmap
 There are still a few things I want to build when I have time:
-- [ ] **Server Dashboard**: A single landing page to monitor everything.
+- [x] **Server Dashboard**: A single landing page to monitor everything.
 - [ ] **Minecraft Server**: For hosting my own world.
 - [ ] **AI Stack**: Setting up Ollama and Whisper servers locally.
 - [ ] **"My Own Alexa"**: Integrating Home Assistant with Ollama, Whisper, and Piper to replace smart speakers with a local privacy-focused voice assistant.
