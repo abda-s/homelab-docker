@@ -10,6 +10,6 @@ services:
     environment:
       TZ: 'Asia/Amman'
       FTLCONF_webserver_api_password: ${ADMIN_PASSWORD}
+      FTLCONF_misc_dnsmasq_lines: ${DNSMASK_LINES}
     volumes:
       - ./etc-pihole:/etc/pihole
-      - ./etc-dnsmasq.d:/etc/dnsmasq.d
