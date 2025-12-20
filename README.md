@@ -9,21 +9,23 @@ Building this was a massive hassle. I spent way too much time fighting with Linu
 *   [**Media Stack**](./media/): A comprehensive suite of applications for managing and streaming media, including Jellyfin, the *Arr suite, and qBittorrent.
 *   [**Smarthome (Home Assistant)**](./smarthome/): A powerful home automation platform for controlling smart devices and creating automations.
 
-## Service Ports
-Here is where everything lives on the network:
+## Service Overview
 
-| Service | Stack | Port | URL |
-| --- | --- | --- | --- |
-| Pi-hole | `dns` | `8085` | `http://<host-ip>:8085` |
-| Home Assistant | `smarthome` | `8123` | `http://<host-ip>:8123` |
-| ESPHome | `smarthome` | `6052` | `http://<host-ip>:6052` |
-| Immich | `immich` | `2283` | `http://<host-ip>:2283` |
-| Jellyfin | `media` | `8096` | `http://<host-ip>:8096` |
-| qBittorrent | `media` | `8080` | `http://<host-ip>:8080` |
-| Prowlarr | `media` | `9696` | `http://<host-ip>:9696` |
-| Sonarr | `media` | `8989` | `http://<host-ip>:8989` |
-| Radarr | `media` | `7878` | `http://<host-ip>:7878` |
-| Bazarr | `media` | `6767` | `http://<host-ip>:6767` |
+Here is a summary of the main services and their access points:
+
+| Service | Stack | URL | Notes |
+| :--- | :--- | :--- | :--- |
+| NGINX | `core` | `http://<subdomain>.elwahsh.home` | Reverse proxy for all other services. |
+| Pi-hole | `dns` | `http://pihole.elwahsh.home` | Network-wide ad-blocker and DNS. |
+| Home Assistant | `smarthome` | `http://ha.elwahsh.home` | Runs in `host` network mode. |
+| ESPHome | `smarthome` | `http://esphome.elwahsh.home` | Runs in `host` network mode. |
+| Immich | `immich` | `http://immich.elwahsh.home` | Photo and video backup. |
+| Jellyfin | `media` | `http://jellyfin.elwahsh.home` | Media server. |
+| qBittorrent | `media` | `http://qbittorrent.elwahsh.home` | Torrent client. |
+| Prowlarr | `media` | `http://prowlarr.elwahsh.home` | Indexer manager for the *Arrs. |
+| Sonarr | `media` | `http://sonarr.elwahsh.home` | TV show automation. |
+| Radarr | `media` | `http://radarr.elwahsh.home` | Movie automation. |
+| Bazarr | `media` | `http://bazarr.elwahsh.home` | Subtitle automation. |
 
 *Note: Home Assistant and ESPHome run in `host` network mode, so they directly use ports `8123` and `6052` respectively on the host machine.*
 
