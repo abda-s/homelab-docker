@@ -1,0 +1,10 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_reverse_proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      # Map your config folder to Nginx's config folder
+      - ./conf.d:/etc/nginx/conf.d
