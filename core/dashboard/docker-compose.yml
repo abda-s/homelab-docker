@@ -1,4 +1,4 @@
-services: 
+services:
   homarr:
     container_name: homarr
     image: ghcr.io/homarr-labs/homarr:latest
@@ -9,4 +9,3 @@ services:
       - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
     ports:
       - '7575:7575'
-			
