@@ -1,0 +1,20 @@
+services:
+  ytptube:
+    image: ghcr.io/arabcoders/ytptube:latest
+    container_name: ytptube
+    restart: unless-stopped
+    # It is recommended to run as your local user to avoid permission issues with downloads
+    user: "0:0"
+    ports:
+      - "3333:8081"
+    volumes:
+      - ./config:/config:rw
+      - ./downloads:/downloads:rw
+    # Optional: Uses RAM for temporary files to reduce disk wear
+    tmpfs:
+      - /tmp
+    environment:
+      # Optional: Enable authentication by uncommenting these
+      # - YTP_AUTH_USERNAME=admin
+      # - YTP_AUTH_PASSWORD=yourpassword
+      - TZ=UTC

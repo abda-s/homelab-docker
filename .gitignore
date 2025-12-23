@@ -14,3 +14,9 @@ dns/pi-hole/*/
 
 # --- Immich ---
 immich/*/
+
+
+core/dashboard/homarr/*/
+
+
+YTP/*/
