@@ -12,8 +12,8 @@ RUN apt-get update && \
 WORKDIR /app
 
 # 3. Install Python libraries
-# (We install directly; no requirements.txt needed for just one lib)
-RUN pip install --no-cache-dir requests
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # 4. Environment variables
 # This fixes the "invisible logs" issue permanently
@@ -21,7 +21,7 @@ ENV PYTHONUNBUFFERED=1
 
 # 5. Copy your script into the image
 # (We will still volume mount it in Compose so you can edit it easily)
-COPY worker.py /app/worker.py
+COPY src/ /app/src/
 
 # 6. Default command to run the script
-CMD ["python", "/app/worker.py"]
+CMD ["python", "-m", "src.main"]

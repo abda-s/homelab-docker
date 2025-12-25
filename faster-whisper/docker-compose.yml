@@ -25,7 +25,7 @@ services:
     container_name: podcast-worker
     restart: unless-stopped
     volumes:
-      - ./worker.py:/app/worker.py
+      - ./src:/app/src
       - ./podcasts_in:/data/input
       - ./transcripts_out:/data/output
       - ./logs:/data/logs

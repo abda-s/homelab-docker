@@ -21,4 +21,8 @@ core/dashboard/homarr/*/
 
 YTP/*/
 
-faster-whisper/*/
+faster-whisper/podcasts_in
+faster-whisper/transcripts_out
+faster-whisper/models
+faster-whisper/logs
+faster-whisper/checkpoints
