@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Optional
 
 import re
-import sys
 import time
 from .utils import ensure_dir, fmt_hhmmss
 
@@ -249,22 +248,18 @@ def remove_silence(
                             
                             if total_duration > 0:
                                 pct = (seconds / total_duration) * 100
-                                # In-place update using \r and sys.stderr
-                                sys.stderr.write(
-                                    f"\rVAD Progress: {fmt_hhmmss(int(seconds))} / {fmt_hhmmss(int(total_duration))} ({pct:.1f}%)"
+                                logger.info(
+                                    "VAD Progress: %s / %s (%.1f%%)",
+                                    fmt_hhmmss(int(seconds)),
+                                    fmt_hhmmss(int(total_duration)),
+                                    pct
                                 )
-                                sys.stderr.flush()
                             else:
-                                sys.stderr.write(f"\rVAD Progress: {fmt_hhmmss(int(seconds))}")
-                                sys.stderr.flush()
+                                logger.info("VAD Progress: %s", fmt_hhmmss(int(seconds)))
                             
                             last_log_time = now
                         except Exception:
                             pass # Parse error, skip log
-        
-        # Newline after done so next log is on fresh line
-        sys.stderr.write("\n")
-        sys.stderr.flush()
 
         ret = process.wait()
         if ret != 0:
