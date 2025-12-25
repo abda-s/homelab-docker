@@ -3,8 +3,6 @@ services:
     image: fedirz/faster-whisper-server:latest-cpu
     container_name: faster-whisper-server
     restart: unless-stopped
-    ports:
-      - "8000:8000"
     volumes:
       - ./models:/root/.cache/huggingface
     environment:

@@ -9,6 +9,7 @@ Building this was a massive hassle. I spent way too much time fighting with Linu
 *   [**Immich**](./immich/): A self-hosted photo and video backup solution, providing a private alternative to Google Photos.
 *   [**Media Stack**](./media/): A comprehensive suite of applications for managing and streaming media, including Jellyfin, the *Arr suite, and qBittorrent.
 *   [**Smarthome (Home Assistant)**](./smarthome/): A powerful home automation platform for controlling smart devices and creating automations.
+*   [**Faster Whisper**](./faster-whisper/): A robust, self-hosted implementation of OpenAI's Whisper model for local speech-to-text transcription. Features a custom worker with Voice Activity Detection (VAD), auto-resume for crashes, and smart queue management.
 
 ## Service Overview
 
