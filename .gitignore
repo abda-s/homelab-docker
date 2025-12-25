@@ -26,3 +26,4 @@ faster-whisper/transcripts_out
 faster-whisper/models
 faster-whisper/logs
 faster-whisper/checkpoints
+faster-whisper/src/__pycache__
