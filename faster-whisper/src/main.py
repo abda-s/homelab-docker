@@ -4,7 +4,7 @@ import signal
 import time
 from typing import Any
 
-from .checkpoint import cleanup_orphan_checkpoints
+from .checkpoint import cleanup_orphan_checkpoints, cleanup_temp_files
 from .config import Config
 from .logging_setup import setup_logger
 from .network import parse_host_port_from_url, wait_for_tcp
@@ -37,6 +37,7 @@ def main() -> None:
         raise SystemExit(1)
 
     cleanup_orphan_checkpoints(worker.cfg, logger)
+    cleanup_temp_files(worker.cfg, logger)
 
     logger.info(
         "Worker started | input=%s | output=%s | checkpoints=%s | resume=%s",

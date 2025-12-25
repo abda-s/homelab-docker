@@ -46,3 +46,24 @@ def cleanup_orphan_checkpoints(cfg: Config, logger: logging.Logger) -> int:
                 pass
     logger.info("Orphan checkpoint cleanup: removed=%d", removed)
     return removed
+
+
+def cleanup_temp_files(cfg: Config, logger: logging.Logger) -> int:
+    """
+    Deletes ALL files in the temp directory on startup.
+    This prevents disk usage accumulation from crashed jobs.
+    """
+    ensure_dir(cfg.temp_dir)
+    removed = 0
+    # Iterate over all files in temp_dir
+    for p in cfg.temp_dir.iterdir():
+        if p.is_file():
+            try:
+                p.unlink() # Hard delete
+                removed += 1
+            except Exception as e:
+                logger.warning("Failed to delete temp file %s: %s", p.name, e)
+    
+    if removed > 0:
+        logger.info("Startup temp cleanup: removed %d files from %s", removed, cfg.temp_dir)
+    return removed
