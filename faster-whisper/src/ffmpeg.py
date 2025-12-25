@@ -199,7 +199,6 @@ def remove_silence(
         "-af",
         filter_str,
         "-c:a",
-        "-c:a",
         "pcm_s16le",  # Use PCM (WAV) for speed (no encoding overhead)
         str(dst),
     ]
