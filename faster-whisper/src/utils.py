@@ -70,6 +70,8 @@ def atomic_write_json(path: Path, data: Dict[str, Any]) -> None:
         os.fsync(f.fileno())
     os.replace(tmp, path)
 
+def seg_key(start: float, end: float, text: str) -> Tuple[float, float, str]:
+    # Round timestamps to milliseconds to dedupe reliably across retries.
     return (round(start, 3), round(end, 3), text.strip())
 
 
