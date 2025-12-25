@@ -158,7 +158,7 @@ def remove_silence(
     src: Path,
     dst: Path,
     logger: logging.Logger,
-    min_silence_duration: float = 0.5,
+    min_silence_duration: float = 5.0,
 ) -> bool:
     """
     Removes silence from audio using dynamic thresholding.
