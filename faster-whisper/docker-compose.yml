@@ -1,0 +1,47 @@
+services:
+  faster-whisper-server:
+    image: fedirz/faster-whisper-server:latest-cpu
+    container_name: faster-whisper-server
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/root/.cache/huggingface
+    environment:
+      - WHISPER__MODEL=deepdml/faster-whisper-large-v3-turbo-ct2
+      - WHISPER__INFERENCE_DEVICE=cpu
+      - WHISPER__COMPUTE_TYPE=int8
+      - WHISPER__CPU_THREADS=5
+    healthcheck:
+      # Simple TCP connection test - just verifies port 8000 is listening
+      test: ["CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/localhost/8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  podcast-worker:
+    build: .
+    container_name: podcast-worker
+    restart: unless-stopped
+    volumes:
+      - ./worker.py:/app/worker.py
+      - ./podcasts_in:/data/input
+      - ./transcripts_out:/data/output
+      - ./logs:/data/logs
+      - ./checkpoints:/data/checkpoints
+    environment:
+      - PYTHONUNBUFFERED=1
+      - WHISPER_URL=http://faster-whisper-server:8000/v1/audio/transcriptions
+      - WHISPER_MODEL=deepdml/faster-whisper-large-v3-turbo-ct2
+      - WHISPER_LANGUAGE=ar  # Change language code here (e.g., 'en', 'es', 'fr')
+      - MAX_RETRIES=3
+      - RETRY_DELAY_BASE=30
+      - CHECK_INTERVAL=10
+      - CHECKPOINT_SAVE_INTERVAL=30
+      - CHECKPOINT_SEGMENT_INTERVAL=100
+      - REQUEST_TIMEOUT=43200
+      - RENAME_FAILED=1
+    depends_on:
+      faster-whisper-server:
+        condition: service_healthy
