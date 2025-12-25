@@ -14,7 +14,12 @@ import requests
 from .checkpoint import checkpoint_path_for, load_checkpoint
 from .config import Config
 from .exceptions import ShutdownRequested
-from .ffmpeg import ffmpeg_cut_resume_chunk, ffprobe_duration_seconds, file_size_mb
+from .ffmpeg import (
+    ffmpeg_cut_resume_chunk,
+    ffprobe_duration_seconds,
+    file_size_mb,
+    remove_silence,
+)
 from .utils import (
     atomic_write_json,
     atomic_write_text,
@@ -334,7 +339,31 @@ class WhisperWorker:
             }
             atomic_write_json(cp_path, cp)
 
-        audio_duration = ffprobe_duration_seconds(input_path, self.logger)
+            atomic_write_json(cp_path, cp)
+        
+        # --- VAD Step ---
+        # We create a clean version of the file (silence removed) and use THAT for everything.
+        clean_path = self.cfg.temp_dir / f"clean_{input_path.name}"
+        # Ensure clean path has correct extension if we changed container (remove_silence uses flac)
+        clean_path = clean_path.with_suffix(".flac")
+        
+        use_path = input_path
+        
+        try:
+            # Only run VAD if we haven't already (or if clean file missing)
+            # But since we clean up clean_path at end, we likely need to re-run.
+            # Optimization: could check if clean_path exists and is recent?
+            # For now, just run it.
+            if remove_silence(input_path, clean_path, self.logger):
+                use_path = clean_path
+                self.logger.info("Using silence-removed file: %s", use_path.name)
+            else:
+                self.logger.info("VAD skipped or failed, using original: %s", use_path.name)
+        except Exception as e:
+            self.logger.warning("VAD error (%s), using original file", e)
+            use_path = input_path
+
+        audio_duration = ffprobe_duration_seconds(use_path, self.logger)
 
         segments_map: Dict[Tuple[float, float, str], Dict[str, Any]] = {}
         for s in cp.get("segments") or []:
@@ -369,7 +398,7 @@ class WhisperWorker:
 
             resume_offset_sec = 0.0
             drop_ends_leq_sec = None
-            target_path = input_path
+            target_path = use_path
             tmp_path = None
 
             # Decide resume mode
@@ -384,7 +413,7 @@ class WhisperWorker:
                 resume_offset_sec = max(0.0, last_end_sec - self.cfg.resume_overlap_sec)
                 drop_ends_leq_sec = last_end_sec
 
-                tmp_base = self.cfg.temp_dir / f"resume_{input_path.name}"
+                tmp_base = self.cfg.temp_dir / f"resume_{use_path.name}"
                 try:
                     for ext in (".wav", ".flac", ".mkv"):
                         p = tmp_base.with_suffix(ext)
@@ -394,7 +423,7 @@ class WhisperWorker:
                     pass
 
                 tmp_path = ffmpeg_cut_resume_chunk(
-                    src=input_path,
+                    src=use_path,
                     dst_base=tmp_base,
                     offset_sec=resume_offset_sec,
                     logger=self.logger,
@@ -409,13 +438,13 @@ class WhisperWorker:
 
                 self.logger.info(
                     "Resume enabled for %s | last_end=%.3fs | offset=%.3fs | overlap=%.3fs",
-                    input_path.name,
+                    use_path.name,
                     last_end_sec,
                     resume_offset_sec,
                     self.cfg.resume_overlap_sec,
                 )
             else:
-                self.logger.info("Starting transcription from beginning: %s", input_path.name)
+                self.logger.info("Starting transcription from beginning: %s", use_path.name)
 
             try:
                 latest_text = self._transcribe_sse_and_merge(
@@ -441,7 +470,8 @@ class WhisperWorker:
                         )
 
                 # Build final transcript from segments (more reliable than partial `text`)
-                transcript = "".join([s["text"] for s in seg_list]).strip()
+                # Fix: Join with space to prevent run-on words
+                transcript = " ".join([s["text"].strip() for s in seg_list]).strip()
                 if not transcript and isinstance(latest_text, str):
                     transcript = latest_text.strip()
 
@@ -524,6 +554,13 @@ class WhisperWorker:
                 if tmp_path is not None:
                     try:
                         soft_delete(tmp_path)
+                    except Exception:
+                        pass
+                
+                # Cleanup VAD file if we created one
+                if use_path == clean_path:
+                    try:
+                        soft_delete(clean_path)
                     except Exception:
                         pass
 
