@@ -351,8 +351,8 @@ class WhisperWorker:
         # --- VAD Step ---
         # We create a clean version of the file (silence removed) and use THAT for everything.
         clean_path = self.cfg.temp_dir / f"clean_{input_path.name}"
-        # Ensure clean path has correct extension if we changed container (remove_silence uses flac)
-        clean_path = clean_path.with_suffix(".flac")
+        # Ensure clean path has correct extension (WAV is faster to write than FLAC)
+        clean_path = clean_path.with_suffix(".wav")
         
         use_path = input_path
         
