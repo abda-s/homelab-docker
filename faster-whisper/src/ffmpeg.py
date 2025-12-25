@@ -5,7 +5,9 @@ import subprocess
 from pathlib import Path
 from typing import Optional
 
-from .utils import ensure_dir
+import re
+import time
+from .utils import ensure_dir, fmt_hhmmss
 
 
 def ffprobe_duration_seconds(path: Path, logger: logging.Logger) -> Optional[float]:
@@ -208,8 +210,60 @@ def remove_silence(
         threshold_db,
     )
 
+    # Get total duration for percentage calculation
+    total_duration = ffprobe_duration_seconds(src, logger) or 0.0
+
     try:
-        subprocess.check_call(cmd)
+        # Use Popen to stream stderr for progress
+        process = subprocess.Popen(
+            cmd,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            errors="replace"
+        )
+        
+        last_log_time = time.time()
+        
+        # Regex to capture time=HH:MM:SS.ms
+        # e.g. time=00:00:05.12
+        time_pattern = re.compile(r"time=(\d{2}:\d{2}:\d{2}\.\d+)")
+
+        if process.stderr:
+            for line in process.stderr:
+                # Still check for completion/errors
+                if not line:
+                    continue
+                
+                now = time.time()
+                if now - last_log_time >= 10.0:  # Log every 10 seconds
+                    match = time_pattern.search(line)
+                    if match:
+                        time_str = match.group(1)
+                        # Extract hours, minutes, seconds from HH:MM:SS.ms
+                        try:
+                            h, m, s = time_str.split(":")
+                            seconds = int(h) * 3600 + int(m) * 60 + float(s)
+                            
+                            if total_duration > 0:
+                                pct = (seconds / total_duration) * 100
+                                logger.info(
+                                    "VAD Progress: %s / %s (%.1f%%)",
+                                    fmt_hhmmss(int(seconds)),
+                                    fmt_hhmmss(int(total_duration)),
+                                    pct
+                                )
+                            else:
+                                logger.info("VAD Progress: %s", fmt_hhmmss(int(seconds)))
+                            
+                            last_log_time = now
+                        except Exception:
+                            pass # Parse error, skip log
+
+        ret = process.wait()
+        if ret != 0:
+            raise subprocess.CalledProcessError(ret, cmd)
+
         return True
     except Exception as e:
         logger.error("remove_silence failed: %s", e)
