@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import sys
 import threading
 import time
 from datetime import datetime
@@ -126,42 +127,22 @@ class WhisperWorker:
             total_time = fmt_hhmmss(int(audio_duration))
             
             if last_event_ago is None:
-                self.logger.info(
-                    "Transcribing: %s | Segments: %d | Progress: %s / %s (%.1f%%) | Elapsed: %s",
-                    file_name,
-                    segments_done,
-                    processed_time,
-                    total_time,
-                    pct_done,
-                    fmt_hhmmss(elapsed),
-                )
+                # Use sys.stderr for in-place updates. 
+                # \033[K clears the rest of the line (ANSI escape), optional but good for cleanliness
+                msg = f"\rTranscribing: {file_name} | Segments: {segments_done} | Progress: {processed_time} / {total_time} ({pct_done:.1f}%) | Elapsed: {fmt_hhmmss(elapsed)}"
+                sys.stderr.write(msg)
+                sys.stderr.flush()
             else:
-                self.logger.info(
-                    "Transcribing: %s | Segments: %d | Progress: %s / %s (%.1f%%) | Elapsed: %s | Stall: %ss",
-                    file_name,
-                    segments_done,
-                    processed_time,
-                    total_time,
-                    pct_done,
-                    fmt_hhmmss(elapsed),
-                    last_event_ago,
-                )
+                msg = f"\rTranscribing: {file_name} | Segments: {segments_done} | Progress: {processed_time} / {total_time} ({pct_done:.1f}%) | Elapsed: {fmt_hhmmss(elapsed)} | Stall: {last_event_ago}s"
+                sys.stderr.write(msg)
+                sys.stderr.flush()
         else:
-            if last_event_ago is None:
-                self.logger.info(
-                    "Transcribing: %s | segments_done=%d | elapsed=%s",
-                    file_name,
-                    segments_done,
-                    fmt_hhmmss(elapsed),
-                )
-            else:
-                self.logger.info(
-                    "Transcribing: %s | segments_done=%d | elapsed=%s | last_event_ago=%ss",
-                    file_name,
-                    segments_done,
-                    fmt_hhmmss(elapsed),
-                    last_event_ago,
-                )
+            # Fallback if no duration known
+            msg = f"\rTranscribing: {file_name} | Segments: {segments_done} | Elapsed: {fmt_hhmmss(elapsed)}"
+            if last_event_ago is not None:
+                msg += f" | Stall: {last_event_ago}s"
+            sys.stderr.write(msg)
+            sys.stderr.flush()
 
     def _transcribe_sse_and_merge(
         self,
@@ -574,6 +555,10 @@ class WhisperWorker:
                     except Exception:
                         pass
 
+        # Finish progress line with a newline
+        sys.stderr.write("\n")
+        sys.stderr.flush()
+        
         cp_final = load_checkpoint(cp_path) or {}
         cp_final["state"] = "permanent_failed"
         cp_final["updated_at"] = utc_now_iso()
