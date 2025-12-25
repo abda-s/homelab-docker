@@ -122,19 +122,26 @@ class WhisperWorker:
 
         if audio_duration and audio_duration > 0 and last_end_sec is not None:
             pct_done = max(0.0, min(100.0, (last_end_sec / audio_duration) * 100.0))
+            processed_time = fmt_hhmmss(int(last_end_sec))
+            total_time = fmt_hhmmss(int(audio_duration))
+            
             if last_event_ago is None:
                 self.logger.info(
-                    "Transcribing: %s | segments_done=%d | done=%.1f%% | elapsed=%s",
+                    "Transcribing: %s | Segments: %d | Progress: %s / %s (%.1f%%) | Elapsed: %s",
                     file_name,
                     segments_done,
+                    processed_time,
+                    total_time,
                     pct_done,
                     fmt_hhmmss(elapsed),
                 )
             else:
                 self.logger.info(
-                    "Transcribing: %s | segments_done=%d | done=%.1f%% | elapsed=%s | last_event_ago=%ss",
+                    "Transcribing: %s | Segments: %d | Progress: %s / %s (%.1f%%) | Elapsed: %s | Stall: %ss",
                     file_name,
                     segments_done,
+                    processed_time,
+                    total_time,
                     pct_done,
                     fmt_hhmmss(elapsed),
                     last_event_ago,
@@ -354,6 +361,7 @@ class WhisperWorker:
             # But since we clean up clean_path at end, we likely need to re-run.
             # Optimization: could check if clean_path exists and is recent?
             # For now, just run it.
+            self.logger.info("VAD: Removing silence from %s ...", input_path.name)
             if remove_silence(input_path, clean_path, self.logger):
                 use_path = clean_path
                 self.logger.info("Using silence-removed file: %s", use_path.name)
@@ -410,6 +418,7 @@ class WhisperWorker:
                 and last_end_sec >= self.cfg.resume_min_last_end_sec
                 and last_end_sec < audio_duration - 1.0
             ):
+                self.logger.info("Resuming %s from %.1fs ...", input_path.name, last_end_sec)
                 resume_offset_sec = max(0.0, last_end_sec - self.cfg.resume_overlap_sec)
                 drop_ends_leq_sec = last_end_sec
 
@@ -422,6 +431,7 @@ class WhisperWorker:
                 except Exception:
                     pass
 
+                self.logger.info("Cutting resume chunk (offset=%.1fs) ...", resume_offset_sec)
                 tmp_path = ffmpeg_cut_resume_chunk(
                     src=use_path,
                     dst_base=tmp_base,
