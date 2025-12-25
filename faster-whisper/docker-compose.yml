@@ -23,6 +23,7 @@ services:
   podcast-worker:
     build: .
     container_name: podcast-worker
+    user: "1000:1000"
     restart: unless-stopped
     volumes:
       - ./src:/app/src
