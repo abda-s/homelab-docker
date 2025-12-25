@@ -10,6 +10,7 @@ Building this was a massive hassle. I spent way too much time fighting with Linu
 *   [**Media Stack**](./media/): A comprehensive suite of applications for managing and streaming media, including Jellyfin, the *Arr suite, and qBittorrent.
 *   [**Smarthome (Home Assistant)**](./smarthome/): A powerful home automation platform for controlling smart devices and creating automations.
 *   [**Faster Whisper**](./faster-whisper/): A robust, self-hosted implementation of OpenAI's Whisper model for local speech-to-text transcription. Features a custom worker with Voice Activity Detection (VAD), auto-resume for crashes, and smart queue management.
+*   [**YTPTube**](./YTP/): A self-hosted YouTube downloader with a web interface.
 
 ## Service Overview
 
@@ -29,6 +30,7 @@ Here is a summary of the main services and their access points:
 | Sonarr | `media` | `http://sonarr.elwahsh.home` | TV show automation. |
 | Radarr | `media` | `http://radarr.elwahsh.home` | Movie automation. |
 | Bazarr | `media` | `http://bazarr.elwahsh.home` | Subtitle automation. |
+| YTPTube | `YTP` | `http://ytp.elwahsh.home` | YouTube downloader. |
 
 *Note: Home Assistant and ESPHome run in `host` network mode, so they directly use ports `8123` and `6052` respectively on the host machine.*
 
