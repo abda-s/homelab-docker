@@ -48,6 +48,8 @@ class WhisperWorker:
                 continue
             if p.name.startswith("processed_"):
                 continue
+            if p.name.startswith("failed_"):
+                continue
             if p.suffix.lower() in self.cfg.supported_formats:
                 out.append(p)
         return sorted(out, key=lambda x: x.name.lower())

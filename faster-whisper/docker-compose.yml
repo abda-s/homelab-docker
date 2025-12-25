@@ -14,7 +14,7 @@ services:
       - WHISPER__CPU_THREADS=5
     healthcheck:
       # Simple TCP connection test - just verifies port 8000 is listening
-      test: ["CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/localhost/8000"]
+      test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/localhost/8000" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,8 +35,8 @@ services:
       - PYTHONUNBUFFERED=1
       - WHISPER_URL=http://faster-whisper-server:8000/v1/audio/transcriptions
       - WHISPER_MODEL=deepdml/faster-whisper-large-v3-turbo-ct2
-      - WHISPER_LANGUAGE=ar  # Change language code here (e.g., 'en', 'es', 'fr')
-      - MAX_RETRIES=3
+      - WHISPER_LANGUAGE=ar # Change language code here (e.g., 'en', 'es', 'fr')
+      - MAX_RETRIES=5
       - RETRY_DELAY_BASE=30
       - CHECK_INTERVAL=10
       - CHECKPOINT_SAVE_INTERVAL=30
