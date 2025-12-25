@@ -429,7 +429,7 @@ class WhisperWorker:
                     for ext in (".wav", ".flac", ".mkv"):
                         p = tmp_base.with_suffix(ext)
                         if p.exists():
-                            soft_delete(p)
+                            p.unlink() # Hard delete old temp files
                 except Exception:
                     pass
 
@@ -565,14 +565,16 @@ class WhisperWorker:
             finally:
                 if tmp_path is not None:
                     try:
-                        soft_delete(tmp_path)
+                        if tmp_path.exists():
+                            tmp_path.unlink() # Hard delete resume chunk
                     except Exception:
                         pass
                 
                 # Cleanup VAD file if we created one
                 if use_path == clean_path:
                     try:
-                        soft_delete(clean_path)
+                        if clean_path.exists():
+                            clean_path.unlink() # Hard delete massive WAV file
                     except Exception:
                         pass
 
