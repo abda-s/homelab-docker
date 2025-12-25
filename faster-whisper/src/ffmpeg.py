@@ -193,6 +193,7 @@ def remove_silence(
         "-hide_banner",
         "-loglevel",
         "error",
+        "-progress", "pipe:2", # Output machine-readable progress to stderr
         "-i",
         str(src),
         "-af",
@@ -201,7 +202,7 @@ def remove_silence(
         "flac",  # Use FLAC for lossless intermediate
         str(dst),
     ]
-
+    
     logger.info(
         "Removing silence: %s -> %s | mean=%.1fdB | thresh=%.1fdB",
         src.name,
@@ -225,9 +226,9 @@ def remove_silence(
         
         last_log_time = time.time()
         
-        # Regex to capture time=HH:MM:SS.ms
-        # e.g. time=00:00:05.12
-        time_pattern = re.compile(r"time=(\d{2}:\d{2}:\d{2}\.\d+)")
+        # Regex to capture out_time=HH:MM:SS.ms (from -progress)
+        # e.g. out_time=00:00:05.120000
+        time_pattern = re.compile(r"out_time=(\d{2}:\d{2}:\d{2}\.\d+)")
 
         if process.stderr:
             for line in process.stderr:
