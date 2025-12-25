@@ -70,6 +70,21 @@ def atomic_write_json(path: Path, data: Dict[str, Any]) -> None:
         os.fsync(f.fileno())
     os.replace(tmp, path)
 
-def seg_key(start: float, end: float, text: str) -> Tuple[float, float, str]:
-    # Round timestamps to milliseconds to dedupe reliably across retries.
     return (round(start, 3), round(end, 3), text.strip())
+
+
+def soft_delete(path: Path) -> None:
+    """
+    Renames the file to 'deleted_{timestamp}_{original_name}' instead of deleting it.
+    """
+    if not path.exists():
+        return
+    
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    new_name = f"deleted_{timestamp}_{path.name}"
+    new_path = path.parent / new_name
+    
+    try:
+        os.replace(path, new_path)
+    except Exception:
+        pass

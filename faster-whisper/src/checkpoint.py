@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional
 from urllib.parse import quote
 
 from .config import Config
-from .utils import ensure_dir
+from .utils import ensure_dir, soft_delete
 
 
 def checkpoint_path_for(cfg: Config, input_file: Path) -> Path:
@@ -32,7 +32,7 @@ def cleanup_orphan_checkpoints(cfg: Config, logger: logging.Logger) -> int:
         data = load_checkpoint(cp)
         if not data:
             try:
-                cp.unlink()
+                soft_delete(cp)
                 removed += 1
             except Exception:
                 pass
@@ -40,7 +40,7 @@ def cleanup_orphan_checkpoints(cfg: Config, logger: logging.Logger) -> int:
         file_path = data.get("file_path")
         if not file_path or not Path(file_path).exists():
             try:
-                cp.unlink()
+                soft_delete(cp)
                 removed += 1
             except Exception:
                 pass

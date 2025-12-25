@@ -23,6 +23,7 @@ from .utils import (
     get_file_signature,
     guess_mime,
     seg_key,
+    soft_delete,
     utc_now_iso,
 )
 from .whisper_api import iter_sse_data
@@ -388,7 +389,7 @@ class WhisperWorker:
                     for ext in (".wav", ".flac", ".mkv"):
                         p = tmp_base.with_suffix(ext)
                         if p.exists():
-                            p.unlink()
+                            soft_delete(p)
                 except Exception:
                     pass
 
@@ -456,7 +457,7 @@ class WhisperWorker:
                 processed = self.rename_processed(input_path)
 
                 try:
-                    cp_path.unlink(missing_ok=True)
+                    soft_delete(cp_path)
                 except Exception:
                     pass
 
@@ -522,7 +523,7 @@ class WhisperWorker:
             finally:
                 if tmp_path is not None:
                     try:
-                        tmp_path.unlink(missing_ok=True)
+                        soft_delete(tmp_path)
                     except Exception:
                         pass
 
