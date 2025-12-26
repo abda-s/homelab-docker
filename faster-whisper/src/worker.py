@@ -190,6 +190,10 @@ class WhisperWorker:
             ("model", self.cfg.whisper_model),
             ("response_format", self.cfg.whisper_response_format),
             ("stream", "true"),
+            ("temperature", "0.3"),
+            ("condition_on_previous_text", "false"), # Fix for infinite repetition loops
+            ("compression_ratio_threshold", "2.4"), # Skip segments with high compression (repetitive text)
+            ("logprob_threshold", "-1.0"), # Skip low confidence segments
         ]
         if self.cfg.whisper_language:
             form.append(("language", self.cfg.whisper_language))
