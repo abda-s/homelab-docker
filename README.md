@@ -11,6 +11,7 @@ Building this was a massive hassle. I spent way too much time fighting with Linu
 *   [**Smarthome (Home Assistant)**](./smarthome/): A powerful home automation platform for controlling smart devices and creating automations.
 *   [**Faster Whisper**](./faster-whisper/): A robust, self-hosted implementation of OpenAI's Whisper model for local speech-to-text transcription. Features a custom worker with Voice Activity Detection (VAD), auto-resume for crashes, and smart queue management.
 *   [**YTPTube**](./YTP/): A self-hosted YouTube downloader with a web interface.
+*   [**Memos**](./memos/): A lightweight, self-hosted note-taking service.
 
 ## Service Overview
 
@@ -31,6 +32,7 @@ Here is a summary of the main services and their access points:
 | Radarr | `media` | `http://radarr.elwahsh.home` | Movie automation. |
 | Bazarr | `media` | `http://bazarr.elwahsh.home` | Subtitle automation. |
 | YTPTube | `YTP` | `http://ytp.elwahsh.home` | YouTube downloader. |
+| Memos | `memos` | `http://memos.elwahsh.home` | Note-taking service. |
 
 *Note: Home Assistant and ESPHome run in `host` network mode, so they directly use ports `8123` and `6052` respectively on the host machine.*
 

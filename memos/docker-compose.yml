@@ -1,0 +1,10 @@
+services:
+  memos:
+    image: neosmemo/memos:stable
+    container_name: memos
+    ports:
+      - "5230:5230"
+    volumes:
+      # Stores data in a .memos folder in your home directory
+      - ~/.memos/:/var/opt/memos
+    restart: always
