@@ -28,4 +28,4 @@ faster-whisper/logs
 faster-whisper/checkpoints
 faster-whisper/src/__pycache__
 
-memoes/config
+memos/config/
