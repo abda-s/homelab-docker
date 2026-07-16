@@ -1,5 +1,5 @@
 # My Homelab
-This is my personal homelab setup. It is a collection of self-hosted services for media, automation, and backups.
+This is my personal homelab setup. It is a collection of self-hosted services for photos, automation, and utilities.
 
 Building this was a massive hassle. I spent way too much time fighting with Linux permissions, Docker volumes, and getting Apple devices to actually respect my local DNS. But it finally works, and it allows me to own my data instead of relying on big tech.
 
@@ -7,12 +7,10 @@ Building this was a massive hassle. I spent way too much time fighting with Linu
 *   [**Dashboard (Homarr)**](./core/dashboard/): A simple and powerful server dashboard.
 *   [**DNS (Pi-hole)**](./dns/pi-hole/): A network-wide ad and tracker blocker. It acts as a local DNS server to filter out unwanted requests.
 *   [**Immich**](./immich/): A self-hosted photo and video backup solution, providing a private alternative to Google Photos.
-*   [**Media Stack**](./media/): A comprehensive suite of applications for managing and streaming media, including Jellyfin, the *Arr suite, and qBittorrent.
 *   [**Smarthome (Home Assistant)**](./smarthome/): A powerful home automation platform for controlling smart devices and creating automations.
 *   [**Faster Whisper**](./faster-whisper/): A robust, self-hosted implementation of OpenAI's Whisper model for local speech-to-text transcription. Features a custom worker with Voice Activity Detection (VAD), auto-resume for crashes, and smart queue management.
 *   [**YTPTube**](./YTP/): A self-hosted YouTube downloader with a web interface.
 *   [**Memos**](./memos/): A lightweight, self-hosted note-taking service.
-*   [**Yamtrack**](./yamtrack/): A self-hosted media tracker for movies, TV shows, anime, manga, video games, books, comics, and board games.
 
 ## Service Overview
 
@@ -26,15 +24,8 @@ Here is a summary of the main services and their access points:
 | Home Assistant | `smarthome` | `http://ha.elwahsh.home` | Runs in `host` network mode. |
 | ESPHome | `smarthome` | `http://esphome.elwahsh.home` | Runs in `host` network mode. |
 | Immich | `immich` | `http://immich.elwahsh.home` | Photo and video backup. |
-| Jellyfin | `media` | `http://jellyfin.elwahsh.home` | Media server. |
-| qBittorrent | `media` | `http://qbittorrent.elwahsh.home` | Torrent client. |
-| Prowlarr | `media` | `http://prowlarr.elwahsh.home` | Indexer manager for the *Arrs. |
-| Sonarr | `media` | `http://sonarr.elwahsh.home` | TV show automation. |
-| Radarr | `media` | `http://radarr.elwahsh.home` | Movie automation. |
-| Bazarr | `media` | `http://bazarr.elwahsh.home` | Subtitle automation. |
 | YTPTube | `YTP` | `http://ytp.elwahsh.home` | YouTube downloader. |
 | Memos | `memos` | `http://memos.elwahsh.home` | Note-taking service. |
-| Yamtrack | `yamtrack` | `http://yamtrack.elwahsh.home` | Media tracker for movies, TV, anime, games, books, and more. |
 
 *Note: Home Assistant and ESPHome run in `host` network mode, so they directly use ports `8123` and `6052` respectively on the host machine.*
 
@@ -49,7 +40,7 @@ There are still a few things I want to build when I have time:
 - [ ] **Remote File Access**: A way to browse server files from anywhere (like Nextcloud or Filebrowser).
 
 ## Usage
-1. Go to the service folder (e.g., `cd media`).
+1. Go to the service folder (e.g., `cd core`).
 2. Check the `.env` file if needed.
 3. Run it:
 ```bash
