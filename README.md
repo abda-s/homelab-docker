@@ -34,8 +34,10 @@ Here is a summary of the main services and their access points:
 
 The following services were previously part of this homelab but have since been decommissioned:
 
-*   **Media Stack** (media/): Jellyfin, Sonarr, Radarr, Prowlarr, qBittorrent, and Bazarr. Removed to simplify the stack and reduce resource usage.
-*   **Yamtrack** (yamtrack/): A self-hosted media tracker for movies, TV, anime, games, books, etc. Removed as it was no longer needed.
+*   **Media Stack** (media/): Jellyfin, Sonarr, Radarr, Prowlarr, qBittorrent, and Bazarr.
+*   **Yamtrack** (yamtrack/): A self-hosted media tracker for movies, TV, anime, games, books, etc.
+
+See the last version with all services at commit [`71bec19`](https://github.com/abda/homelab-docker/commit/71bec198ef53689d00769f0b5efb8ab4658cdcdc).
 
 ## Roadmap
 There are still a few things I want to build when I have time:
