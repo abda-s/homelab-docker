@@ -34,8 +34,8 @@ Here is a summary of the main services and their access points:
 There are still a few things I want to build when I have time:
 - [x] **Server Dashboard**: A single landing page to monitor everything.
 - [ ] **Minecraft Server**: For hosting my own world.
-- [ ] **AI Stack**: Setting up Ollama and Whisper servers locally.
-- [ ] **"My Own Alexa"**: Integrating Home Assistant with Ollama, Whisper, and Piper to replace smart speakers with a local privacy-focused voice assistant.
+- [x] **AI Stack**: Setting up Ollama and Whisper servers locally. (Tried, but the hardware ain't good enough - didn't work out)
+- [x] **"My Own Alexa"**: Integrating Home Assistant with Ollama, Whisper, and Piper to replace smart speakers with a local privacy-focused voice assistant. (Tried, but the hardware ain't good enough - didn't work out)
 - [ ] **Laptop Backups**: An automated solution to backup my personal machine to the server.
 - [ ] **Remote File Access**: A way to browse server files from anywhere (like Nextcloud or Filebrowser).
 
