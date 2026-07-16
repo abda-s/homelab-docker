@@ -30,6 +30,13 @@ Here is a summary of the main services and their access points:
 *Note: Home Assistant and ESPHome run in `host` network mode, so they directly use ports `8123` and `6052` respectively on the host machine.*
 
 
+## Removed Services
+
+The following services were previously part of this homelab but have since been decommissioned:
+
+*   **Media Stack** (media/): Jellyfin, Sonarr, Radarr, Prowlarr, qBittorrent, and Bazarr. Removed to simplify the stack and reduce resource usage.
+*   **Yamtrack** (yamtrack/): A self-hosted media tracker for movies, TV, anime, games, books, etc. Removed as it was no longer needed.
+
 ## Roadmap
 There are still a few things I want to build when I have time:
 - [x] **Server Dashboard**: A single landing page to monitor everything.
