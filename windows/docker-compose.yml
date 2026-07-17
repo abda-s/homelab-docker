@@ -1,0 +1,30 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    env_file: .env
+    environment:
+      VERSION: "win11"
+      RAM_SIZE: "8G"
+      CPU_CORES: "2"
+      DISK_SIZE: "120G"
+    ports:
+      - "3389:3389/tcp"
+      - "3389:3389/udp"
+    volumes:
+      - /mnt/media/windows-vm:/storage
+    devices:
+      - /dev/kvm
+    cap_add:
+      - NET_ADMIN
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    restart: unless-stopped
+    stop_grace_period: 2m
+    deploy:
+      resources:
+        limits:
+          memory: 9G
+        reservations:
+          memory: 8G
